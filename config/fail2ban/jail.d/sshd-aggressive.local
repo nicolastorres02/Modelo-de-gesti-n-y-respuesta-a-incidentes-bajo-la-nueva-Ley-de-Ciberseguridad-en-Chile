@@ -1,0 +1,6 @@
+# Override de laboratorio para acelerar la detección del escenario E1.
+# Reduce findtime/bantime para medir el TTC de forma repetible.
+[sshd]
+maxretry = 5
+findtime = 120
+bantime  = 120

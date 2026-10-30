@@ -1,0 +1,21 @@
+# jail.local — Configuración de Fail2ban para el modelo de respuesta (victima-02)
+# Estudio: Modelo de gestión y respuesta a incidentes bajo la Ley 21.663 (Chile)
+# Parámetros fijados a priori antes de medir (ver tesis, sección 3.5).
+
+[DEFAULT]
+# Ventana de observación y duración del bloqueo (acotadas para el laboratorio)
+findtime = 120
+bantime  = 120
+maxretry = 5
+backend  = systemd
+# Acción: bloqueo de la IP en el cortafuegos
+banaction = iptables-multiport
+
+[sshd]
+enabled  = true
+port     = ssh
+filter   = sshd
+logpath  = /var/log/auth.log
+maxretry = 5
+findtime = 120
+bantime  = 120

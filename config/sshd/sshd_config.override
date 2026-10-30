@@ -1,0 +1,9 @@
+# Override aplicado a /etc/ssh/sshd_config en victima-02.
+# Se desactiva PerSourcePenalties (OpenSSH >= 9.8) para que la medición del
+# TTC dependa SOLO de Fail2ban y no de la penalización interna de OpenSSH,
+# garantizando una comparación limpia entre condición base y modelo.
+PerSourcePenalties no
+# El servicio debe quedar disponible en 22/TCP (RF-01)
+Port 22
+PermitRootLogin yes          # solo entorno de laboratorio aislado
+PasswordAuthentication yes   # necesario para simular fuerza bruta con Hydra
