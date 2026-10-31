@@ -1,4 +1,4 @@
-# Modelo de gestión y respuesta a incidentes bajo la Ley 21.663 (Chile)
+# Modelo de gestión y respuesta a incidentes bajo la nueva Ley de Ciberseguridad en Chile
 
 Repositorio de evidencias, código y configuración de la tesina **"Modelo de
 gestión y respuesta a incidentes bajo la nueva Ley de Ciberseguridad en Chile"**.
