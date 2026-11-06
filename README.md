@@ -136,6 +136,16 @@ detalle completo: [`results/resultados_centinela.md`](results/resultados_centine
 ![TTN con Centinela](results/fig_ttn_centinela.png)
 ![TTC base, modelo y Centinela](results/fig_ttc_base_modelo_centinela.png)
 
+## Evidencia visual
+- [`results/figuras_tesis/`](results/figuras_tesis/): figuras del desarrollo
+  experimental de la tesina (entorno VMware, reconocimiento, Apache, Nikto,
+  Gobuster, Hydra, `auth.log` y Fail2ban).
+- [`results/capturas_centinela/`](results/capturas_centinela/): funcionamiento de
+  Centinela, desde el ataque hasta la alerta temprana, el correo, la evaluación,
+  la bitácora y el estado del sistema.
+
+![Incidente en Centinela](results/capturas_centinela/04-incidente-clasificacion-metricas.png)
+
 ## Licencia
 Código y configuración bajo licencia MIT (ver `LICENSE`). Documentos y datos de la
 tesina: uso académico.
