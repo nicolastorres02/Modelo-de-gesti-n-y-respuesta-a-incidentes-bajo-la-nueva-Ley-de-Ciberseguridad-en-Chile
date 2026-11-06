@@ -24,7 +24,7 @@ data/           Datos crudos: TTC (15 base + 15 modelo) y TTN con Centinela (15)
 analysis/       Análisis estadístico (Mann-Whitney, Wilcoxon, tamaño de efecto, figuras)
 results/        Figuras y salidas del análisis
 plantillas/     Plantillas de reporte a la ANCI (condición modelo, redacción manual)
-casos_prueba/   Casos de prueba CP-01 a CP-05 (verificación de RF/RNF)
+casos_prueba/   Casos de prueba CP-01 a CP-07 (verificación de RF/RNF)
 taxonomia/      Lista de verificación para clasificar incidentes (Res. Ex. 7/2025)
 ```
 
