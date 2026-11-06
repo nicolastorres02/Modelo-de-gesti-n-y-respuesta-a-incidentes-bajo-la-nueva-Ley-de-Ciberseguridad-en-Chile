@@ -119,7 +119,7 @@ detalle completo: [`results/resultados_centinela.md`](results/resultados_centine
 |---|---|---|
 | TTN total (t0 → alerta temprana completa) | **15,9 s (0,27 min)** | 4,26 min con runbook y redacción manual (Tabla N.º 17): **−93,8 %** |
 | t0 → decisión del delegado (incluye revisión humana) | **1,69 min** | **−60,2 %** respecto de 4,26 min; máximo 2,30 min |
-| TTC | 15,6 s | Base manual 26,0 s (U = 18,0; p = 4,77 × 10⁻⁵; r = 0,84) |
+| TTC | 15,6 s | Base manual 26,0 s (U = 18,0; p = 4,75 × 10⁻⁵; r = 0,84) |
 
 - Wilcoxon de una muestra, unilateral (H1: mediana < 4,26 min): **p = 3,05 × 10⁻⁵**,
   tanto para el TTN total como para la cadena con decisión humana.
