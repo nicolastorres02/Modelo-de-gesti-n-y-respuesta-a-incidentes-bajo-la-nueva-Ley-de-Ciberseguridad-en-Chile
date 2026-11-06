@@ -1,0 +1,23 @@
+CENTINELA - ACCESO DIRECTO PARA WINDOWS
+=======================================
+
+Requisitos: el computador debe estar conectado a la red del laboratorio
+y la maquina de Centinela (victima-02) debe estar encendida.
+
+1. Haga doble clic en  instalar_centinela.bat
+2. Windows pedira confirmar la instalacion del certificado de Centinela:
+   compare la huella que aparece en la ventana negra y pulse "Si".
+3. Aparecera el icono "Centinela" en el escritorio y en el menu Inicio.
+   Al abrirlo se muestra la pantalla de inicio de sesion del panel
+   en su propia ventana.
+
+Si Centinela esta en otra IP, abra una terminal en esta carpeta y ejecute:
+   instalar_centinela.bat 192.168.58.132
+
+Cada persona inicia sesion con su propio usuario. El administrador
+los crea en la maquina de Centinela con:
+   sudo centinela usuario crear NOMBRE
+
+Para desinstalar: borre el icono del escritorio y, si quiere quitar el
+certificado, ejecute certmgr.msc > Entidades de certificacion raiz de
+confianza > Certificados > "Centinela CA (laboratorio)" > Eliminar.

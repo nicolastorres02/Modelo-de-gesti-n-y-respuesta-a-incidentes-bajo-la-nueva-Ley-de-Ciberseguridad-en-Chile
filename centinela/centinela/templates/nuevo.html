@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block titulo %}Registrar incidente{% endblock %}
+{% block contenido %}
+<p><a href="{{ url_for('inicio') }}">← Incidentes</a></p>
+<h1>Registrar incidente manual</h1>
+<p class="nota">Para incidentes que Fail2ban no detecta: ransomware, caída de un servicio, phishing, aviso de un
+  proveedor o del CSIRT Nacional, etc. El incidente sigue el mismo flujo: alerta temprana, plazos legales,
+  evaluación de efecto significativo, correo y bitácora.</p>
+{% if error %}<p class="aviso alerta" role="alert">{{ error }}</p>{% endif %}
+<form method="post" class="formulario">
+  <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+
+  <label for="conocimiento">Fecha y hora de conocimiento del incidente <small>(desde aquí corren los plazos · DS 295, art. 9.º)</small></label>
+  <input id="conocimiento" name="conocimiento" type="datetime-local" required value="{{ v.conocimiento }}">
+
+  <label for="inicio">Fecha estimada de inicio <small>(si se conoce · art. 5.º c)</small></label>
+  <input id="inicio" name="inicio" type="datetime-local" value="{{ v.inicio or '' }}">
+
+  <label for="clasificacion">Clasificación según el efecto observable <small>({{ base_legal }})</small></label>
+  <select id="clasificacion" name="clasificacion" required>
+    <option value="">— Elija la categoría —</option>
+    {% for area, items in opciones %}
+      <optgroup label="{{ area }}">
+      {% for valor, efecto, cat in items %}
+        <option value="{{ valor }}" {{ 'selected' if v.clasificacion == valor }}>{{ efecto }} → {{ cat }}</option>
+      {% endfor %}
+      </optgroup>
+    {% endfor %}
+  </select>
+
+  <label for="indicios">Indicio principal <small>(art. 5.º f)</small></label>
+  <select id="indicios" name="indicios" required>
+    <option value="">— Elija —</option>
+    {% for i in indicios %}<option {{ 'selected' if v.indicios == i }}>{{ i }}</option>{% endfor %}
+  </select>
+
+  <label for="descripcion">Descripción de lo observado</label>
+  <textarea id="descripcion" name="descripcion" rows="4" required minlength="20">{{ v.descripcion or '' }}</textarea>
+
+  <label for="activos">Activos y recursos afectados <small>(art. 5.º g: servidores, aplicaciones, repositorios de datos…)</small></label>
+  <textarea id="activos" name="activos" rows="2" required>{{ v.activos or '' }}</textarea>
+
+  <label for="ip">IP de origen <small>(opcional; la IP no es dato personal · art. 6.º)</small></label>
+  <input id="ip" name="ip" value="{{ v.ip or '' }}" placeholder="Déjela en blanco si no se conoce">
+
+  <label for="contencion">Acciones de contención aplicadas <small>(opcional)</small></label>
+  <textarea id="contencion" name="contencion" rows="2">{{ v.contencion or '' }}</textarea>
+
+  <p class="nota">No incluya datos personales (nombres, RUT de personas, correos personales): el DS 295, art. 6.º,
+    exige omitirlos en los reportes.</p>
+  <button class="boton primario" type="submit">Registrar y generar alerta temprana</button>
+</form>
+{% endblock %}

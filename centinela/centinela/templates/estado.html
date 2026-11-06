@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block titulo %}Estado del sistema{% endblock %}
+{% block contenido %}
+<h1>Estado del sistema</h1>
+<p class="nota">Comprobaciones de la integración con Fail2ban, las bitácoras, el reloj, el correo y la integridad de la auditoría. Revisado el {{ ahora | fecha }}.</p>
+{% set problemas = items | selectattr('ok', 'equalto', false) | list %}
+<p class="aviso {{ 'alerta' if problemas else 'ok' }}">
+  {% if problemas %}{{ problemas|length }} comprobación(es) con problemas.{% else %}Todo en orden.{% endif %}
+</p>
+<div class="tabla-scroll">
+<table>
+  <thead><tr><th>Comprobación</th><th>Estado</th><th>Detalle</th></tr></thead>
+  <tbody>
+  {% for i in items %}
+    <tr>
+      <td>{{ i.nombre }}</td>
+      <td><span class="estado {{ 'enviado' if i.ok else 'pendiente' if i.ok is none else 'vencido' }}">{{ 'OK' if i.ok else 'no disponible' if i.ok is none else 'PROBLEMA' }}</span></td>
+      <td class="corto">{{ i.detalle }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<h2>Correo de prueba</h2>
+{% if resultado_correo %}<p class="aviso">{{ resultado_correo }}</p>{% endif %}
+<form method="post" action="{{ url_for('probar_correo') }}">
+  <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+  <button class="boton" type="submit">Enviar correo de prueba al delegado</button>
+</form>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block titulo %}Incidentes{% endblock %}
+{% block en_vivo %}contenido{% endblock %}
+{% block contenido %}
+<section class="tarjetas">
+  <div class="tarjeta"><span class="num">{{ resumen.abiertos }}</span><span>Incidentes abiertos</span></div>
+  <div class="tarjeta {{ 'alerta' if resumen.por_evaluar }}"><span class="num">{{ resumen.por_evaluar }}</span><span>Por evaluar si son reportables</span></div>
+  <div class="tarjeta {{ 'alerta' if resumen.por_vencer }}"><span class="num">{{ resumen.por_vencer }}</span><span>Reportes por vencer</span></div>
+  <div class="tarjeta {{ 'peligro' if resumen.vencidos }}"><span class="num">{{ resumen.vencidos }}</span><span>Reportes vencidos</span></div>
+  <div class="tarjeta"><span class="num">{{ resumen.mediana_ttn | seg }}</span><span>Mediana TTN (detección → alerta)</span></div>
+</section>
+
+<div class="titulo-accion">
+  <h1>Incidentes</h1>
+  <a class="boton primario" href="{{ url_for('incidente_nuevo') }}">Registrar incidente manual</a>
+</div>
+{% if not filas %}
+  <p class="vacio">Aún no hay incidentes. Centinela registrará uno automáticamente cuando Fail2ban bloquee una IP.
+    Los incidentes que no detecta Fail2ban (por ejemplo, ransomware o la caída de un servicio) se registran con
+    «Registrar incidente manual».</p>
+{% else %}
+<div class="tabla-scroll">
+<table>
+  <thead>
+    <tr>
+      <th>Incidente</th><th>IP origen</th><th>Clasificación ANCI</th><th>¿Reportable?</th><th>Conocimiento</th>
+      <th>TTC</th>
+      {% for n in nombres %}<th>{{ n }}</th>{% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+  {% for f in filas %}
+    {% set ev = f.inc.evaluacion %}
+    <tr class="{{ 'cerrado' if f.inc.estado == 'cerrado' }}">
+      <td>
+        <a href="{{ url_for('incidente', inc_id=f.inc.id) }}">{{ f.inc.id }}</a>
+        {% if f.inc.demo %}<span class="chip demo">DEMO</span>{% endif %}
+        {% if f.inc.escenario == 'manual' %}<span class="chip">Manual</span>{% endif %}
+        {% if f.inc.estado == 'cerrado' %}<span class="chip">Cerrado</span>{% endif %}
+      </td>
+      <td><code>{{ f.inc.ip or '—' }}</code>
+        {% if (f.inc.bloqueos or [])|length > 1 %}<span class="chip alerta" title="Bloqueos agrupados en este incidente">×{{ f.inc.bloqueos|length }}</span>{% endif %}
+        {% if not f.inc.reconocido %}<span class="chip peligro">Sin revisar</span>{% endif %}</td>
+      <td>{{ f.inc.subcategoria }}{% if f.inc.requiere_revision %} <span class="chip alerta">Revisar</span>{% endif %}
+        <br><small>{{ f.inc.categoria }}{% if f.inc.escenario != 'manual' %} · {{ f.inc.escenario }} · jaula {{ f.inc.jail }}{% endif %}</small></td>
+      <td>{% if not ev %}<span class="estado por_vencer">Por evaluar</span>
+          {% elif ev.decision == 'reportable' %}<span class="estado vencido" title="DS 295, art. 3.º">Reportable</span>
+          {% else %}<span class="estado enviado">No reportable</span>{% endif %}</td>
+      <td>{{ f.inc.t_deteccion | fecha }}</td>
+      <td>{{ f.m.ttc_s | seg }}</td>
+      {% for p in f.plazos %}
+        <td><span class="estado {{ p.e.estado }}" title="{{ p.e.motivo or ('Desde ' ~ p.e.desde) }}">{{ p.texto }}</span>
+          {% if p.e.aplica and not p.e.enviado and f.inc.estado == 'abierto' %}<br><small data-restante="{{ p.e.restante_s }}"></small>{% endif %}
+        </td>
+      {% endfor %}
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}

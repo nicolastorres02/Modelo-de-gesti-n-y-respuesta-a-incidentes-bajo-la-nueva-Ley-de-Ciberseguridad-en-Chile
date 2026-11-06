@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Centinela{% endblock %} · Centinela</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
+  {% include "_app_head.html" %}
+</head>
+<body data-en-vivo="{% block en_vivo %}aviso{% endblock %}"
+      data-api="{{ url_for('api_estado') }}" data-base="{{ url_for('inicio') }}"
+      data-login="{{ url_for('login') }}">
+  <header class="barra">
+    <a class="marca" href="{{ url_for('inicio') }}">Centinela</a>
+    <span class="lema">Notificación de incidentes · Ley N.º 21.663</span>
+    <nav>
+      <span class="en-vivo" id="en-vivo" title="El panel consulta novedades cada 2 segundos">● En vivo</span>
+      <button class="sonido" id="sonido" type="button" title="Los navegadores exigen un clic antes de permitir sonido">Activar sonido</button>
+      <button class="sonido" id="probar-sonido" type="button" title="Reproduce la alarma una vez para comprobar el volumen">Probar sonido</button>
+      <a href="{{ url_for('inicio') }}">Incidentes</a>
+      <a href="{{ url_for('metricas') }}">Métricas</a>
+      <a href="{{ url_for('estado_sistema') }}">Estado</a>
+      <a href="{{ url_for('bitacora') }}">Bitácora</a>
+      <button class="sonido" id="instalar-app" type="button" hidden title="Crea un acceso directo que abre el panel en su propia ventana">Instalar aplicación</button>
+      <form method="post" action="{{ url_for('logout') }}" class="salir">
+        <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+        <span class="usuario-actual">{{ usuario }}</span>
+        <button type="submit" class="sonido">Salir</button>
+      </form>
+    </nav>
+  </header>
+  <button class="activar-audio" id="activar-audio" type="button" hidden>
+    La alarma sonora y las notificaciones de escritorio están desactivadas: haga clic aquí para activarlas
+    <small>(el navegador exige un clic en la página antes de permitir sonido)</small>
+  </button>
+  <div class="aviso-nuevo" id="aviso-nuevo" role="alert" hidden>
+    <strong id="aviso-titulo">Nuevo incidente detectado</strong>
+    <span id="aviso-texto"></span>
+    <a class="boton primario" id="aviso-enlace" href="#">Ver incidente</a>
+    <button class="boton" id="aviso-sonido" type="button" hidden>Activar sonido de la alarma</button>
+    <small class="aviso-nota">La alarma suena hasta que se abra el incidente.</small>
+  </div>
+  <div class="aviso-plazo" id="aviso-plazo" role="status" hidden>
+    <strong id="plazo-titulo">Reporte por vencer</strong>
+    <span id="plazo-texto"></span>
+    <a class="boton" id="plazo-enlace" href="#">Ir al incidente</a>
+  </div>
+  <main id="contenido">
+    {% block contenido %}{% endblock %}
+  </main>
+  <script src="{{ url_for('static', filename='panel.js') }}"></script>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

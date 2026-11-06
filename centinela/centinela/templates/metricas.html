@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block titulo %}Métricas{% endblock %}
+{% block en_vivo %}contenido{% endblock %}
+{% block contenido %}
+<h1>Métricas de respuesta</h1>
+<p class="nota">TTD: t0 → detección · TTC: t0 → bloqueo · TTN: detección → alerta temprana generada ·
+  TTN total: t0 → alerta temprana generada (misma cadena que la Tabla N.º 17 de la tesis) ·
+  Revisión: detección → el operador abre el incidente · Decisión: detección → el delegado registra si es reportable.
+  {% if incluir_demo %}<a href="{{ url_for('metricas') }}">Ocultar incidentes DEMO</a>{% else %}<a href="{{ url_for('metricas', demo=1) }}">Incluir incidentes DEMO</a>{% endif %}
+  · <a href="{{ url_for('metricas_csv') }}">Descargar CSV</a></p>
+
+<section class="tarjetas">
+  <div class="tarjeta"><span class="num">{{ filas|length }}</span><span>Incidentes</span></div>
+  <div class="tarjeta"><span class="num">{{ resumen.ttc_s | seg }}</span><span>Mediana TTC</span></div>
+  <div class="tarjeta"><span class="num">{{ resumen.ttn_total_s | seg }}</span><span>Mediana TTN total (t0 → alerta)</span></div>
+  <div class="tarjeta"><span class="num">{{ resumen.ttr_s | seg }}</span><span>Mediana detección → revisión</span></div>
+  <div class="tarjeta"><span class="num">{{ resumen.tte_s | seg }}</span><span>Mediana detección → decisión</span></div>
+  <div class="tarjeta"><span class="num">{{ cumple_ttc|select|list|length }}/{{ cumple_ttc|length }}</span><span>Cumplen TTC ≤ 60 s</span></div>
+  <div class="tarjeta"><span class="num">{{ cumple_ttn|select|list|length }}/{{ cumple_ttn|length }}</span><span>Cumplen TTN ≤ 180 min</span></div>
+</section>
+
+<div class="tabla-scroll">
+<table>
+  <thead><tr><th>Incidente</th><th>Escenario</th><th>t0</th><th>TTD</th><th>TTC</th><th>TTN</th><th>TTN total</th><th>Revisión</th><th>Decisión</th></tr></thead>
+  <tbody>
+  {% for f in filas %}
+    <tr>
+      <td><a href="{{ url_for('incidente', inc_id=f.inc.id) }}">{{ f.inc.id }}</a>{% if f.inc.demo %} <span class="chip demo">DEMO</span>{% endif %}</td>
+      <td>{{ f.inc.escenario }}</td>
+      <td>{{ f.inc.t0 | fecha }}</td>
+      <td>{{ f.m.ttd_s | seg }}</td>
+      <td>{{ f.m.ttc_s | seg }}</td>
+      <td>{{ f.m.ttn_s | seg }}</td>
+      <td>{{ f.m.ttn_total_s | seg }}</td>
+      <td>{{ f.m.ttr_s | seg }}</td>
+      <td>{{ f.m.tte_s | seg }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="9" class="vacio">Sin incidentes.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

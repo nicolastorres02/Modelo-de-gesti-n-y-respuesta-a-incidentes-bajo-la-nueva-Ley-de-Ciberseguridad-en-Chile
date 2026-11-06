@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Iniciar sesión · Centinela</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='estilo.css') }}">
+  {% include "_app_head.html" %}
+</head>
+<body class="pagina-login">
+  <main class="caja-login">
+    <img class="logo-login" src="{{ url_for('static', filename='icono-192.png') }}" alt="" width="72" height="72">
+    <h1>Centinela</h1>
+    <p class="nota">Notificación de incidentes · Ley N.º 21.663</p>
+    {% if error %}<p class="aviso alerta" role="alert">{{ error }}</p>{% endif %}
+    {% if sin_usuarios %}
+      <p class="aviso alerta">No hay usuarios creados. En la máquina víctima ejecute:<br>
+        <code>sudo centinela usuario crear admin</code></p>
+    {% endif %}
+    <form method="post" class="formulario" autocomplete="off">
+      <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+      <input type="hidden" name="siguiente" value="{{ siguiente }}">
+      <label for="usuario">Usuario</label>
+      <input id="usuario" name="usuario" required autofocus>
+      <label for="clave">Contraseña</label>
+      <input id="clave" name="clave" type="password" required>
+      <button class="boton primario" type="submit">Ingresar</button>
+    </form>
+    <p class="nota">Tras {{ config_max }} intentos fallidos el acceso se bloquea temporalmente.</p>
+    <button class="boton boton-instalar" id="instalar-app" type="button" hidden>Instalar como aplicación de escritorio</button>
+  </main>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

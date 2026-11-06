@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block titulo %}Bitácora de auditoría{% endblock %}
+{% block en_vivo %}contenido{% endblock %}
+{% block contenido %}
+<h1>Bitácora de auditoría</h1>
+<p class="nota">Cada acción de Centinela y de los operadores queda registrada. Cada registro incluye la huella SHA-256 del anterior, así que cualquier modificación o borrado rompe la cadena.</p>
+<p class="aviso {{ 'ok' if cadena.integra else 'alerta' }}">
+  {% if cadena.integra %}Cadena íntegra: {{ cadena.registros }} registros verificados.
+  {% else %}LA BITÁCORA FUE ALTERADA: la cadena se rompe en el registro {{ cadena.falla_en }}.{% endif %}
+</p>
+
+{% set alterados = pdfs | rejectattr('integro') | list %}
+<h2>Integridad de los PDF</h2>
+<p class="aviso {{ 'alerta' if alterados else 'ok' }}">
+  {% if alterados %}{{ alterados|length }} PDF no coinciden con su huella registrada:
+    {% for a in alterados %}{{ a.incidente_id }} ({{ a.tipo }}){{ ', ' if not loop.last }}{% endfor %}
+  {% else %}{{ pdfs|length }} PDF coinciden con su huella SHA-256 registrada.{% endif %}
+</p>
+
+<h2>Últimos registros</h2>
+<div class="tabla-scroll">
+<table>
+  <thead><tr><th>#</th><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Incidente</th><th>Detalle</th><th>Huella</th></tr></thead>
+  <tbody>
+  {% for b in registros %}
+    <tr>
+      <td>{{ b.id }}</td><td>{{ b.ts | fecha }}</td><td>{{ b.usuario }}</td><td>{{ b.accion }}</td>
+      <td>{% if b.incidente_id %}<a href="{{ url_for('incidente', inc_id=b.incidente_id) }}">{{ b.incidente_id }}</a>{% else %}—{% endif %}</td>
+      <td class="corto">{{ b.detalle }}</td><td><code class="huella">{{ b.hash[:12] }}…</code></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="7" class="vacio">Sin registros.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+﻿__pycache__/
+*.pyc
+.pytest_cache/
+.venv*/
+centinela/datos/
+centinela/buzon/
+# salidas generadas al ejecutar el análisis sobre data/
+data/resultados_mediciones.md
+data/ejecuciones_validas.csv
+data/figura_*.png

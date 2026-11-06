@@ -1,0 +1,6 @@
+# Los scripts de Linux deben conservar fin de línea LF
+*.sh   text eol=lf
+*.conf text eol=lf
+*.local text eol=lf
+*.whl  binary
+*.png  binary

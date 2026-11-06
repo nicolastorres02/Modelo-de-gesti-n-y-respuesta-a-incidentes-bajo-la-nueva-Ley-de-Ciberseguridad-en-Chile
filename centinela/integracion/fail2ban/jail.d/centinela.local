@@ -1,0 +1,27 @@
+# Integración de Centinela con Fail2ban.
+# El instalador genera /etc/fail2ban/jail.d/centinela.local a partir de este
+# archivo (la jaula web solo se activa si existe /var/log/apache2/access.log).
+#
+# %(action_)s = bloqueo con banaction (iptables-multiport), igual que en el estudio.
+# centinela   = notificación (clasificación ANCI, PDF, correo, panel).
+#
+# La jaula sshd conserva los parámetros del estudio definidos en jail.local
+# (maxretry = 5, findtime = 120, bantime = 120).
+
+[sshd]
+action = %(action_)s
+         centinela
+
+# Escenario E2: escaneo / enumeración web (Gobuster, Nikto)
+[centinela-escaneo-web]
+enabled  = true
+port     = http,https
+filter   = centinela-escaneo-web
+logpath  = /var/log/apache2/access.log
+# jail.local usa backend = systemd; Apache escribe en un archivo
+backend  = auto
+maxretry = 20
+findtime = 60
+bantime  = 120
+action   = %(action_)s
+           centinela
